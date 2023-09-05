@@ -214,11 +214,11 @@
             var sliderSpeed = 500;
             var autoPlaySpeed = 1000;
 
-            // ミュータブルな変数
-            var currentPosition = 0;
-            
             var movingPosition = containerWrap[0].clientWidth;
-            var sliderItemTotalWidth;
+
+            // ミュータブルな変数
+            var currentPosition = -(movingPosition);
+            var sliderItemTotalWidth = 0;
 
             /**
              * 何かしらの処理
@@ -229,18 +229,22 @@
               btn.classList.contains(PREV) ? PREV_BTN = btn : NEXT_BTN = btn;
             }
 
-            // スライド複製
-            containerInner.innerHTML += containerInner.innerHTML;
-            for (var i = 0; i < containerWrap.length; i++){
-              containerWrap[i].setAttribute("telop-label", [i + 1] + "/" + [containerWrap.length]);
+            // スライドプリセット
+            var itemLen = containerWrap.length;
+            if (itemLen < 5) {
+              containerInner.innerHTML += containerInner.innerHTML;
+              itemLen = containerWrap.length;
             }
-
-            // スライダーにフラグセット
-            containerWrap[0].classList.add(CURRENT);
-
-            // スライダーの長さ取得
-            sliderItemTotalWidth = containerWrap[0].clientWidth * (containerWrap.length - 1);
-
+            for (var i = 0; i < itemLen; i++){
+              containerWrap[i].setAttribute("telop-label", [i + 1] + "/" + [itemLen]);
+            }
+            var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+            var firstItem = containerWrap[0];
+            var lastItem = containerWrap[itemLen -1];
+            firstItem.classList.add(CURRENT);
+            containerInner.insertBefore(lastItem, firstItem);
+            containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+            sliderItemTotalWidth = containerWrap[0].clientWidth * (itemLen - 1);
 
             /**
              * 自動再生関連
@@ -262,7 +266,7 @@
             function checkElementVisibility() {
               var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
               var firstItem = containerWrap[0];
-              var lastItem = containerWrap[containerWrap.length - 1];
+              var lastItem = containerWrap[itemLen - 1];
               var isVisible = isElementInViewport(currentItem);
 
               if (currentItem.nextElementSibling) {
@@ -306,27 +310,26 @@
               isSlideEnabled = false;
               // clearInterval(autoPlayTimer);
 
-              var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
-              var firstItem = containerWrap[0];
-              var lastItem = containerWrap[containerWrap.length -1];
-              if (currentItem.previousElementSibling) {
-                currentPosition += movingPosition;
-                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                containerInner.style.transitionDuration = sliderSpeed + "ms";
-                currentItem.previousElementSibling.classList.add(CURRENT);
-                currentItem.classList.remove(CURRENT);
+              currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+              firstItem = containerWrap[0];
+              lastItem = containerWrap[itemLen -1];
+              
+              currentPosition += movingPosition;
+              containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+              containerInner.style.transitionDuration = sliderSpeed + "ms";
+              currentItem.previousElementSibling.classList.add(CURRENT);
+              currentItem.classList.remove(CURRENT);
+              if (firstItem.classList.contains(CURRENT)) {
                 setTimeout(function() {
-                  containerInner.style.transitionDuration = "0ms";
-                }, sliderSpeed / 1.4);
-              } else {
-                containerInner.appendChild(firstItem);
-                currentPosition = 0;
-                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                currentItem.classList.remove(CURRENT);
-                containerWrap[0].classList.add(CURRENT);
+                  currentPosition = -(sliderItemTotalWidth - movingPosition);
+                  containerInner.appendChild(firstItem);
+                  containerInner.appendChild(containerWrap[0])
+                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                }, sliderSpeed);
               }
               setTimeout(function() {
                 // sliderAutoPlay();
+                containerInner.style.transitionDuration = "0ms";
                 isSlideEnabled = true;
               }, sliderSpeed);
             }, false);
@@ -335,32 +338,25 @@
               isSlideEnabled = false;
               // clearInterval(autoPlayTimer);
 
-              var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
-              var firstItem = containerWrap[0];
-              var lastItem = containerWrap[containerWrap.length - 1];
-              if (currentItem.nextElementSibling) {
-                currentPosition += -movingPosition;
-                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                containerInner.style.transitionDuration = sliderSpeed + "ms";
-                currentItem.nextElementSibling.classList.add(CURRENT);
-                currentItem.classList.remove(CURRENT);
+              currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+              lastItem = containerWrap[itemLen - 1];
+
+              currentPosition += -movingPosition;
+              containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+              containerInner.style.transitionDuration = sliderSpeed + "ms";
+              currentItem.nextElementSibling.classList.add(CURRENT);
+              currentItem.classList.remove(CURRENT);
+              if (containerWrap[itemLen - 1].classList.contains(CURRENT)) {
                 setTimeout(function() {
-                  containerInner.style.transitionDuration = "0ms";
-                }, sliderSpeed / 1.4);
-              } else {
-                containerInner.appendChild(firstItem);
-                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                containerInner.style.transitionDuration =  sliderSpeed + "ms";
-                containerInner.style.transitionDelay = "";
-                currentItem.nextElementSibling.classList.add(CURRENT);
-                currentItem.classList.remove(CURRENT);
-                setTimeout(function() {
-                  containerInner.style.transitionDuration = "0ms";
-                  containerInner.style.transitionDelay = "0ms";
-                }, sliderSpeed / 1.4);
+                  currentPosition = -(movingPosition);
+                  containerInner.insertBefore(lastItem, containerWrap[0]);
+                  containerInner.insertBefore(containerWrap[itemLen - 1], containerWrap[0]);
+                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                }, sliderSpeed);
               }
               setTimeout(function() {
                 // sliderAutoPlay();
+                containerInner.style.transitionDuration = "0ms";
                 isSlideEnabled = true;
               }, sliderSpeed);
             }, false);
@@ -375,7 +371,7 @@
             var shiftedPosition = 0;
             var SwipeStart = 0;
   
-            for (var i = 0; i < containerWrap.length; i++) {
+            for (var i = 0; i < itemLen; i++) {
               containerWrap[i].addEventListener("touchstart", (e) => {
                 // clearInterval(autoPlayTimer);
                 shiftedPosition = currentPosition;
@@ -384,33 +380,50 @@
     
               containerWrap[i].addEventListener("touchmove", (e) => {
                 var swipeDistance = Math.abs(touchEndX - touchStartX);
-  
                 touchEndX = e.touches[0].clientX;
-                // if (touchStartX - touchEndX > distance) {
-                // } else if (touchEndX - touchStartX > distance) {
-                // }
               });
     
-              containerWrap[i].addEventListener("touchend", () => {
+              containerWrap[i].addEventListener("touchend", (e) => {
                 if (!isSlideEnabled) return;
                 isSlideEnabled = false;
-                if (touchStartX - touchEndX > distance) {
-                  currentPosition += -movingPosition;
-                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                  containerInner.style.transitionDuration = sliderSpeed + "ms";
-                  // console.log("左にスワイプされました");
-                } else if (touchEndX - touchStartX > distance) {
+
+                currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+                firstItem = containerWrap[0];
+                lastItem = containerWrap[itemLen -1];
+                if (touchEndX - touchStartX > distance) {
                   currentPosition += movingPosition;
                   containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                   containerInner.style.transitionDuration = sliderSpeed + "ms";
-                  // console.log("右にスワイプされました");
+                  currentItem.previousElementSibling.classList.add(CURRENT);
+                  currentItem.classList.remove(CURRENT);
+                  if (firstItem.classList.contains(CURRENT)) {
+                    setTimeout(function() {
+                      currentPosition = -(sliderItemTotalWidth - movingPosition);
+                      containerInner.appendChild(firstItem);
+                      containerInner.appendChild(containerWrap[0])
+                      containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                    }, sliderSpeed);
+                  }
+                  console.log("右にスワイプされました"); // like prev
+                } else if (touchStartX - touchEndX > distance) {
+                  currentPosition += -movingPosition;
+                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                  containerInner.style.transitionDuration = sliderSpeed + "ms";
+                  currentItem.nextElementSibling.classList.add(CURRENT);
+                  currentItem.classList.remove(CURRENT);
+                  if (containerWrap[itemLen - 1].classList.contains(CURRENT)) {
+                    setTimeout(function() {
+                      currentPosition = -(movingPosition);
+                      containerInner.insertBefore(lastItem, containerWrap[0]);
+                      containerInner.insertBefore(containerWrap[itemLen - 1], containerWrap[0]);
+                      containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                    }, sliderSpeed);
+                  }
+                  console.log("左にスワイプされました"); // like next
                 }
                 setTimeout(function() {
-                  containerInner.style.transitionDuration = "0ms";
-                }, sliderSpeed / 1.4);
-
-                setTimeout(function() {
                   // sliderAutoPlay();
+                  containerInner.style.transitionDuration = "0ms";
                   isSlideEnabled = true;
                 }, sliderSpeed);
 
