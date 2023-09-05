@@ -298,7 +298,7 @@
                 }
               }, speed);
             }
-            // sliderAutoPlay();
+            sliderAutoPlay();
 
             /**
              * ボタン関連
@@ -308,7 +308,7 @@
             PREV_BTN.addEventListener("click", function(e) {
               if (!isSlideEnabled) return;
               isSlideEnabled = false;
-              // clearInterval(autoPlayTimer);
+              clearInterval(autoPlayTimer);
 
               currentItem = containerInner.getElementsByClassName(CURRENT)[0];
               firstItem = containerWrap[0];
@@ -328,7 +328,7 @@
                 }, sliderSpeed);
               }
               setTimeout(function() {
-                // sliderAutoPlay();
+                sliderAutoPlay();
                 containerInner.style.transitionDuration = "0ms";
                 isSlideEnabled = true;
               }, sliderSpeed);
@@ -336,7 +336,7 @@
             NEXT_BTN.addEventListener("click", function(e) {
               if (!isSlideEnabled) return;
               isSlideEnabled = false;
-              // clearInterval(autoPlayTimer);
+              clearInterval(autoPlayTimer);
 
               currentItem = containerInner.getElementsByClassName(CURRENT)[0];
               lastItem = containerWrap[itemLen - 1];
@@ -355,7 +355,7 @@
                 }, sliderSpeed);
               }
               setTimeout(function() {
-                // sliderAutoPlay();
+                sliderAutoPlay();
                 containerInner.style.transitionDuration = "0ms";
                 isSlideEnabled = true;
               }, sliderSpeed);
@@ -373,7 +373,7 @@
   
             for (var i = 0; i < itemLen; i++) {
               containerWrap[i].addEventListener("touchstart", (e) => {
-                // clearInterval(autoPlayTimer);
+                clearInterval(autoPlayTimer);
                 shiftedPosition = currentPosition;
                 touchStartX = e.touches[0].clientX;
               });
@@ -422,7 +422,7 @@
                   console.log("左にスワイプされました"); // like next
                 }
                 setTimeout(function() {
-                  // sliderAutoPlay();
+                  sliderAutoPlay();
                   containerInner.style.transitionDuration = "0ms";
                   isSlideEnabled = true;
                 }, sliderSpeed);
