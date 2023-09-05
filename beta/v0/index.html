@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main style="min-height: 100vh">
+      <section>
+        <h1>GENIEE レコメンド用テロップFMT - v0</h1>
+      </section>
+      <article>
+        <ul>
+          <li style="height: 300px">記事1</li>
+          <li style="height: 300px">記事2</li>
+          <li style="height: 300px">記事3</li>
+          <li style="height: 300px">記事4</li>
+          <li style="height: 300px">記事5</li>
+        </ul>
+      </article>
+      <a href="../../index.html">TOP</a>
+    </main>
+    <div id="geniee_overlay">
+      <!-- Prepend -->
+      <style>
+      #geniee_overlay {
+        position: fixed;
+        bottom:0!important;
+        left: 0;
+      }
+      #geniee_overlay > div {
+        position: relative;
+      }
+      </style>
+      <img src="https://works.gsspcln.jp/w/ad_format/close_icons/close_icon_bold.png" width="16" height="16" id="geniee_overlay_close" style="position: absolute; top: -16px; left: 0;">
+      <div class="gn-telop_outer_100">
+        <style>
+          .gn-telop_outer_100 {
+            background: rgba(0, 0, 0, 0.5);
+          }
+          .gn-telop_inner_100 {
+            position: relative;
+            width: 320px;
+            height: 50px;
+            overflow: hidden;
+          }
+          .gn-telop_container_100 {
+            width: 100%;
+            height: 100%;
+            margin: 0 35px;
+          }
+          .gn-telop_container-inner_100 {
+            position: relative;
+            display: flex;
+            flex-wrap: nowrap;
+            width: 100%;
+            height: 100%;
+          }
+          .gn-telop_container-wrap_100 {
+            width: calc(100% - 70px);
+            height: 100%;
+            flex-shrink: 0;
+            background: #000;
+            overflow: hidden;
+          }
+          .gn-telop_container-wrap-inner_100 {
+            position: relative;
+            display: flex;
+          }
+          .gn-telop_image-container_100 {
+            position: relative;
+            width: 45px;
+            margin: 2px;
+          }
+          .gn-telop_image-container_100::before {
+            content: '';
+            display: block;
+            padding-top: 100%;
+          }
+          .gn-telop_image-container_100 img {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+          .gn-telop_text-container_100 {
+            position: relative;
+            width: 100%;
+            padding: 0 16px 0 4px;
+          }
+          .gn-telop_text-title_100 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            margin: 4px 0 0;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            line-height: 1.35;
+          }
+          .gn-telop_text-optout_100 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            margin: 0;
+            color: #fff;
+            font-size: 9px;
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+          }
+          .gn-telop_toggle-btn_100 {
+            position: absolute;
+            width: 35px;
+            height: 50px;
+            background: #999;
+            cursor: pointer;
+          }
+          .gn-telop_toggle-btn_100::before {
+            content: '';
+            border-top: 2px solid #aaa;
+            position: absolute;
+            inset: 0;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+          }
+          .gn-telop_toggle-btn_100.next {
+            inset: auto 0 0 auto;
+          }
+          .gn-telop_toggle-btn_100.next::before {
+            border-right: 2px solid #aaa;
+            transform: rotate(45deg);
+          }
+          .gn-telop_toggle-btn_100.prev {
+            inset: auto auto 0 0;
+          }
+          .gn-telop_toggle-btn_100.prev::before {
+            border-left: 2px solid #aaa;
+            transform: rotate(-45deg);
+          }
+        </style>
+        <div class="gn-telop_inner_100">
+          <div class="gn-telop_container_100">
+            <div class="gn-telop_container-inner_100">
+              <div class="gn-telop_container-wrap_100">
+                <a class="gn-telop_container-wrap-inner_100" link="{landing-url}" target="_blank">
+                  <div class="gn-telop_image-container_100">
+                    <img src="https://another.geniee.jp/test/murano/Reproducts/tori.jpg" alt="" />
+                  </div>
+                  <div class="gn-telop_text-container_100">
+                    <p class="gn-telop_text-title_100">ためしてガッテン！！！</p>
+                    <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                  </div>
+                </a>
+              </div>
+              <div class="gn-telop_container-wrap_100">
+                <a class="gn-telop_container-wrap-inner_100" link="{landing-url}" target="_blank">
+                  <div class="gn-telop_image-container_100">
+                    <img src="{icon-url}" alt="" />
+                  </div>
+                  <div class="gn-telop_text-container_100">
+                    <p class="gn-telop_text-title_100">{title}</p>
+                    <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                  </div>
+                </a>
+              </div>
+              <div class="gn-telop_container-wrap_100">
+                <a class="gn-telop_container-wrap-inner_100" link="{landing-url}" target="_blank">
+                  <div class="gn-telop_image-container_100">
+                    <img src="{icon-url}" alt="" />
+                  </div>
+                  <div class="gn-telop_text-container_100">
+                    <p class="gn-telop_text-title_100">伊東家の食卓</p>
+                    <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="gn-telop_toggle-btn_100 prev"></div>
+          <div class="gn-telop_toggle-btn_100 next"></div>
+        </div>
+        
+        <script>
+          (function(window, document) {
+            // 定数
+            var TAG_ID = "100";
+            var CURRENT = "current",PREV = "prev", NEXT = "next";
+            var PREV_BTN,NEXT_BTN;
+
+            // イミュータブルな変数
+            var telopOuter = document.getElementsByClassName("gn-telop_outer_" + TAG_ID)[0];
+            var telopInner = document.getElementsByClassName("gn-telop_inner_" + TAG_ID)[0];
+            var container = document.getElementsByClassName("gn-telop_container_" + TAG_ID)[0];
+            var containerInner = document.getElementsByClassName("gn-telop_container-inner_" + TAG_ID)[0];
+            var containerWrap = document.getElementsByClassName("gn-telop_container-wrap_" + TAG_ID);
+            var toggleBtn = document.getElementsByClassName("gn-telop_toggle-btn_" + TAG_ID);
+            
+            var sliderSpeed = 500;
+            var autoPlaySpeed = 1000;
+
+            // ミュータブルな変数
+            var currentPosition = 0;
+            
+            var movingPosition = containerWrap[0].clientWidth;
+            var sliderItemTotalWidth;
+
+            /**
+             * 何かしらの処理
+            */
+            // 送りボタンの前後を判別して変数に代入
+            for (var i = 0; i < toggleBtn.length; i++) {
+              var btn = toggleBtn[i];
+              btn.classList.contains(PREV) ? PREV_BTN = btn : NEXT_BTN = btn;
+            }
+
+            // スライド複製
+            containerInner.innerHTML += containerInner.innerHTML;
+            for (var i = 0; i < containerWrap.length; i++){
+              containerWrap[i].setAttribute("telop-label", [i + 1] + "/" + [containerWrap.length]);
+            }
+
+            // スライダーにフラグセット
+            containerWrap[0].classList.add(CURRENT);
+
+            // スライダーの長さ取得
+            sliderItemTotalWidth = containerWrap[0].clientWidth * (containerWrap.length - 1);
+
+
+            /**
+             * 自動再生関連
+             */
+            // 対象要素の描画位置を取得
+            function isElementInViewport(elm) {
+              var elmRect = elm.getBoundingClientRect();
+              var windowWidth = window.innerWidth || document.documentContent.clientWidth;
+              var windowHeight = window.innerHeight || document.documentContent.clientHeight;
+
+              return (
+                elmRect.top >= 0 &&
+                elmRect.left >= -movingPosition &&
+                elmRect.bottom <= windowHeight &&
+                elmRect.right <= windowWidth
+              );
+            }
+            // 対象要素が画面内に表示されているかどうかを判別
+            function checkElementVisibility() {
+              var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+              var firstItem = containerWrap[0];
+              var lastItem = containerWrap[containerWrap.length - 1];
+              var isVisible = isElementInViewport(currentItem);
+
+              if (currentItem.nextElementSibling) {
+                if (isVisible) {
+                  currentItem.classList.add(CURRENT);
+                } else {
+                  currentItem.classList.remove(CURRENT);
+                  currentItem.nextElementSibling.classList.add(CURRENT);
+                }
+              } else {
+                containerInner.insertBefore(lastItem, firstItem);
+                currentPosition = -movingPosition;
+                currentItem.classList.remove(CURRENT);
+                firstItem.classList.add(CURRENT);
+              }
+            }
+            //自動再生を行う
+            function sliderAutoPlay() {
+              var speed = 10;
+              autoPlayTimer = setInterval(function() {
+                currentPosition += -0.25;
+                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                containerInner.style.transform = autoPlaySpeed + "ms";
+                checkElementVisibility();
+
+                if (currentPosition <= -sliderItemTotalWidth) {
+                  currentPosition = 0;
+                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                }
+              }, speed);
+            }
+            sliderAutoPlay();
+
+            /**
+             * ボタン関連
+             */
+            isSlideEnabled = true;
+            // ボタンをクリックしたときの処理
+            PREV_BTN.addEventListener("click", function(e) {
+              if (!isSlideEnabled) return;
+              isSlideEnabled = false;
+
+              var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+              var firstItem = containerWrap[0];
+              var lastItem = containerWrap[containerWrap.length -1];
+
+              clearInterval(autoPlayTimer);
+
+              if (!firstItem.classList.contains(CURRENT)) {
+                currentPosition += movingPosition;
+                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                containerInner.style.transitionDuration = sliderSpeed + "ms";
+                setTimeout(function() {
+                  containerInner.style.transitionDuration = "0ms";
+                }, sliderSpeed / 1.4);
+              }
+
+              if (currentItem.previousElementSibling) {
+                currentItem.previousElementSibling.classList.add(CURRENT);
+                currentItem.classList.remove(CURRENT);
+              } else {
+                containerInner.appendChild(firstItem);
+                currentPosition = -sliderItemTotalWidth - -movingPosition;
+                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                currentItem.classList.remove(CURRENT);
+                containerWrap[containerWrap.length - 2].classList.add(CURRENT);
+              }
+
+              setTimeout(function() {
+                sliderAutoPlay();
+                isSlideEnabled = true;
+              }, sliderSpeed * 2);
+            }, false);
+            NEXT_BTN.addEventListener("click", function(e) {
+              if (!isSlideEnabled) return;
+              isSlideEnabled = false;
+
+              var currentItem = containerInner.getElementsByClassName(CURRENT)[0];
+              var firstItem = containerWrap[0];
+              var lastItem = containerWrap[containerWrap.length - 1];
+
+              clearInterval(autoPlayTimer);
+
+              if (!lastItem.classList.contains(CURRENT)) {
+                currentPosition += -movingPosition;
+                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                containerInner.style.transitionDuration = sliderSpeed + "ms";
+                setTimeout(function() {
+                  containerInner.style.transitionDuration = "0ms";
+                }, sliderSpeed / 1.4);
+              }
+
+              if (currentItem.nextElementSibling) {
+                currentItem.nextElementSibling.classList.add(CURRENT);
+                currentItem.classList.remove(CURRENT);
+              } else {
+                containerInner.insertBefore(lastItem, firstItem);
+                currentPosition = -movingPosition;
+                containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                currentItem.classList.remove(CURRENT);
+                containerWrap[1].classList.add(CURRENT);
+              }
+
+              setTimeout(function() {
+                sliderAutoPlay();
+                isSlideEnabled = true;
+              }, sliderSpeed * 2);
+            }, false);
+
+            /**
+             * スワイプ関連
+             */
+            var touchStartX = 0;
+            var touchEndX = 0;
+            var touchMoveValue = 2;
+            var distance = 50
+            var shiftedPosition = 0;
+            var SwipeStart = 0;
+  
+            for (var i = 0; i < containerWrap.length; i++) {
+              containerWrap[i].addEventListener("touchstart", (e) => {
+                clearInterval(autoPlayTimer);
+                shiftedPosition = currentPosition;
+                touchStartX = e.touches[0].clientX;
+              });
+    
+              containerWrap[i].addEventListener("touchmove", (e) => {
+                var swipeDistance = Math.abs(touchEndX - touchStartX);
+  
+                touchEndX = e.touches[0].clientX;
+                // if (touchStartX - touchEndX > distance) {
+                // } else if (touchEndX - touchStartX > distance) {
+                // }
+              });
+    
+              containerWrap[i].addEventListener("touchend", () => {
+                if (!isSlideEnabled) return;
+                isSlideEnabled = false;
+                if (touchStartX - touchEndX > distance) {
+                  currentPosition += -movingPosition;
+                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                  containerInner.style.transitionDuration = sliderSpeed + "ms";
+                  // console.log("左にスワイプされました");
+                } else if (touchEndX - touchStartX > distance) {
+                  currentPosition += movingPosition;
+                  containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                  containerInner.style.transitionDuration = sliderSpeed + "ms";
+                  // console.log("右にスワイプされました");
+                }
+                setTimeout(function() {
+                  containerInner.style.transitionDuration = "0ms";
+                }, sliderSpeed / 1.4);
+
+                setTimeout(function() {
+                  sliderAutoPlay();
+                  isSlideEnabled = true;
+                }, sliderSpeed * 2);
+
+                // 初期化
+                touchStartX = 0;
+                touchEndX = 0;
+              });
+            }
+          })(window, document);
+        </script>
+      </div>
+      <!-- Append -->
+      <script src="https://works.gsspcln.jp/w/ad_format/deliveryRestrict.js"></script>
+      <script>
+        ((window, document) => {
+          var gnOv = document.getElementById("geniee_overlay");
+          var gnOvCloseBtn = document.getElementById("geniee_overlay_close");
+          if (!gnOv || !gnOvCloseBtn) return;
+          var BANNER_WIDTH = 320;
+          var BANNER_HEIGHT = 100;
+          var scale = screen.width / BANNER_WIDTH;
+          if (!window.isMobile()) scale = 1;
+          gnOv.style.transform = `scale(${scale})`;
+          gnOv.style.transformOrigin = "left bottom";
+          gnOvCloseBtn.addEventListener("click", () => {
+            gnOv.style.display = "none";
+          });
+
+          document.body.style.marginBottom = BANNER_HEIGHT * scale + "px";
+        })(window, document);
+      </script>
+    </div>
+
+  </body>
+</html>

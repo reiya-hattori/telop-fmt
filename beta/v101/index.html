@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>GENIEE レコメンド用テロップFMT - v101</h1>
+  <div id="geniee_overlay">
+    <!-- Prepend -->
+    <style>
+    #geniee_overlay {
+      position: fixed;
+      bottom:0!important;
+      left: 0;
+    }
+    #geniee_overlay > div {
+      position: relative;
+    }
+    </style>
+    <img src="https://works.gsspcln.jp/w/ad_format/close_icons/close_icon_bold.png" width="16" height="16" id="geniee_overlay_close" style="position: absolute; top: -16px; left: 0;">
+    <div class="gn-telop_outer_100">
+      <style>
+        .gn-telop_outer_100 {
+          background: rgba(0, 0, 0, 0.5);
+        }
+        .gn-telop_inner_100 {
+          position: relative;
+          width: 320px;
+          height: 50px;
+          overflow: hidden;
+        }
+        .gn-telop_container_100 {
+          width: 100%;
+          height: 100%;
+          margin: 0 35px;
+        }
+        .gn-telop_container-inner_100 {
+          display: flex;
+          flex-wrap: nowrap;
+          width: 100%;
+          height: 100%;
+        }
+        .gn-telop_container-wrap_100 {
+          width: calc(100% - 70px);
+          height: 100%;
+          flex-shrink: 0;
+          background: #000;
+          overflow: hidden;
+        }
+        .gn-telop_container-wrap-inner_100 {
+          position: relative;
+          display: flex;
+        }
+        .gn-telop_image-container_100 {
+          position: relative;
+          width: 45px;
+          margin: 2px;
+        }
+        .gn-telop_image-container_100::before {
+          content: '';
+          display: block;
+          padding-top: 100%;
+        }
+        .gn-telop_image-container_100 img {
+          position: absolute;
+          inset: 0;
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .gn-telop_text-container_100 {
+          position: relative;
+          width: 100%;
+          padding: 0 16px 0 4px;
+        }
+        .gn-telop_text-title_100 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          margin: 4px 0 0;
+          color: #fff;
+          font-weight: bold;
+          font-size: 13px;
+          line-height: 1.35;
+        }
+        .gn-telop_text-optout_100 {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          margin: 0;
+          color: #fff;
+          font-size: 9px;
+          position: absolute;
+          bottom: 0;
+          left: 4px;
+        }
+        .gn-telop_toggle-btn_100 {
+          position: absolute;
+          width: 35px;
+          height: 50px;
+          background: #999;
+          cursor: pointer;
+        }
+        .gn-telop_toggle-btn_100::before {
+          content: '';
+          border-top: 2px solid #aaa;
+          position: absolute;
+          inset: 0;
+          width: 16px;
+          height: 16px;
+          margin: auto;
+        }
+        .gn-telop_toggle-btn_100.next {
+          inset: auto 0 0 auto;
+        }
+        .gn-telop_toggle-btn_100.next::before {
+          border-right: 2px solid #aaa;
+          transform: rotate(45deg);
+        }
+        .gn-telop_toggle-btn_100.prev {
+          inset: auto auto 0 0;
+        }
+        .gn-telop_toggle-btn_100.prev::before {
+          border-left: 2px solid #aaa;
+          transform: rotate(-45deg);
+        }
+      </style>
+      <div class="gn-telop_inner_100">
+        <div class="gn-telop_container_100">
+          <div class="gn-telop_container-inner_100">
+            <div class="gn-telop_container-wrap_100">
+              <a class="gn-telop_container-wrap-inner_100" link="{landing-url}" target="_blank">
+                <div class="gn-telop_image-container_100">
+                  <img src="https://another.geniee.jp/test/murano/Reproducts/tori.jpg" alt="" />
+                </div>
+                <div class="gn-telop_text-container_100">
+                  <p class="gn-telop_text-title_100">ためしてガッテン！！！</p>
+                  <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                </div>
+              </a>
+            </div>
+            <div class="gn-telop_container-wrap_100">
+              <a class="gn-telop_container-wrap-inner_100" link="{landing-url}" target="_blank">
+                <div class="gn-telop_image-container_100">
+                  <img src="{icon-url}" alt="" />
+                </div>
+                <div class="gn-telop_text-container_100">
+                  <p class="gn-telop_text-title_100">{title}</p>
+                  <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                </div>
+              </a>
+            </div>
+            <div class="gn-telop_container-wrap_100">
+              <a class="gn-telop_container-wrap-inner_100" link="{landing-url}" target="_blank">
+                <div class="gn-telop_image-container_100">
+                  <img src="{icon-url}" alt="" />
+                </div>
+                <div class="gn-telop_text-container_100">
+                  <p class="gn-telop_text-title_100">伊東家の食卓</p>
+                  <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="gn-telop_toggle-btn_100 prev"></div>
+        <div class="gn-telop_toggle-btn_100 next"></div>
+      </div>
+      <script>
+        (function(window, document) {
+          // 定数
+          var TAG_ID = "100";
+  
+          // イミュータブルな変数
+          var telopOuter = document.getElementsByClassName("gn-telop_outer_" + TAG_ID)[0];
+          var telopInner = document.getElementsByClassName("gn-telop_inner_" + TAG_ID)[0];
+          var container = document.getElementsByClassName("gn-telop_container_" + TAG_ID)[0];
+          var containerInner = document.getElementsByClassName("gn-telop_container-inner_" + TAG_ID)[0];
+          var containerWrap = document.getElementsByClassName("gn-telop_container-wrap_" + TAG_ID);
+          var toggleBtn = document.getElementsByClassName("gn-telop_toggle-btn_" + TAG_ID);
+  
+          var movingPosition = containerWrap[0].clientWidth;
+  
+          var sliderSpeed = 500;
+          var autoPlaySpeed = 1000;
+  
+          // ミュータブルな変数
+          var autoScrollInterval = 100;
+          var autoScrollTimer;
+          var current = "current",prev = "prev", next = "next";
+          var prevBtn,nextBtn;
+          var currentPosition = 0;
+  
+          /**
+           * 何かしらの処理
+          */
+  
+  
+  
+  
+          // 送りボタンの前後を判別して変数に代入
+          for (var i = 0; i < toggleBtn.length; i++) {
+            var btn = toggleBtn[i];
+            btn.classList.contains(prev) ? prevBtn = btn : nextBtn = btn;
+          }
+  
+          /**
+           * DOM操作 
+           */
+          // スライド複製
+          containerInner.innerHTML += containerInner.innerHTML;
+  
+          // スライダーにフラグセット
+          containerWrap[0].classList.add(current);
+          // containerWrap[1].classList.add(next);
+  
+          // ボタンをクリックしたときの処理
+  
+          prevBtn.addEventListener("click", function(e) {
+            // clearInterval(autoPlayTimer);
+            currentPosition += movingPosition;
+            containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+            containerInner.style.transitionDuration = sliderSpeed + "ms";
+            setTimeout(function() {
+              containerInner.style.transitionDuration = "0ms";
+              // sliderAutoPlay();
+            }, sliderSpeed / 1.4);
+          }, false);
+          nextBtn.addEventListener("click", function(e) {
+            // clearInterval(autoPlayTimer);
+            currentPosition += -movingPosition;
+            containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+            containerInner.style.transitionDuration = sliderSpeed + "ms";
+            setTimeout(function() {
+              containerInner.style.transitionDuration = "0ms";
+              // sliderAutoPlay();
+            }, sliderSpeed / 1.4);
+          }, false);
+  
+          // コンテンツのスライドアクションに関する処理
+          nextBtn.addEventListener("click", function() {
+            var currentItem = containerInner.getElementsByClassName(current)[0];
+            currentItem.nextElementSibling.classList.add(current);
+            currentItem.classList.remove(current);
+          }, false);
+          prevBtn.addEventListener("click", function() {
+            var currentItem = containerInner.getElementsByClassName(current)[0];
+            currentItem.previousElementSibling.classList.add(current);
+            currentItem.classList.remove(current);
+          //   containerInner.insertBefore(containerWrap[containerWrap.length - 1], containerWrap[0]);
+          // }, false);
+          // nextBtn.addEventListener("click", function() {
+          //   containerInner.appendChild(containerWrap[0]);
+          //   console.log(containerWrap);
+          }, false);
+  
+          // function sliderAutoPlay() {
+          //   autoPlayTimer = setInterval(function() {
+          //     currentPosition += 0.05;
+          //     containerInner.style.transform = "translate3d(" + -currentPosition + "px, 0, 0)";
+          //     containerInner.style.transform = autoPlaySpeed + "ms";
+          //     console.log(currentPosition)
+          //   }, 1);
+          // }
+          // sliderAutoPlay();
+  
+          // function startAutoScroll() {
+          //   autoScrollTimer = setInterval(function() {
+          //     currentPosition += 1;
+          //     container.scrollTo(currentPosition, 0);
+          //     // if (currentPosition >= container.scrollWidth - container.clientWidth) {
+          //     //   currentPosition = 0;
+          //     // }
+          //   }, autoScrollInterval);
+          // }
+  
+          // function stopAutoScroll() {
+          //   clearInterval(autoScrollTimer);
+          // }
+  
+          // startAutoScroll();
+  
+          var touchStartX = 0;
+          var touchEndX = 0;
+          var touchMoveValue = 2;
+          var distance = 10
+  
+          telopInner.addEventListener("touchstart", (e) => {
+            touchStartX = e.touches[0].clientX;
+          });
+  
+          telopInner.addEventListener("touchmove", (e) => {
+            var swipeDistance = Math.abs(touchEndX - touchStartX);
+  
+            touchEndX = e.touches[0].clientX;
+            if (touchStartX - touchEndX > distance) {
+              // 左にスワイプされた場合の処理
+              currentPosition += -touchMoveValue;
+              console.log(swipeDistance)
+              // containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+              console.log("左にスワイプされました");
+            } else if (touchEndX - touchStartX > distance) {
+              // 右にスワイプされた場合の処理
+              currentPosition += touchMoveValue;
+              console.log(swipeDistance)
+              // containerInner.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+              console.log("右にスワイプされました");
+            }
+          });
+  
+          telopInner.addEventListener("touchend", () => {
+            if (touchStartX - touchEndX > 50) {
+              // 左にスワイプされた場合の処理
+              // console.log("左にスワイプされました");
+            } else if (touchEndX - touchStartX > 50) {
+              // 右にスワイプされた場合の処理
+              // console.log("右にスワイプされました");
+            }
+            
+            // 初期化
+            touchStartX = 0;
+            touchEndX = 0;
+          });
+        })(window, document);
+      </script>
+    </div>
+    <!-- Append -->
+    <script>
+    ((window, document) => {
+    var gnOv = document.getElementById("geniee_overlay");
+    var gnOvCloseBtn = document.getElementById("geniee_overlay_close");
+    if (!gnOv || !gnOvCloseBtn) return;
+    var BANNER_WIDTH = 320;
+    var BANNER_HEIGHT = 100;
+    var scale = screen.width / BANNER_WIDTH;
+  
+    gnOv.style.transform = `scale(${scale})`;
+    gnOv.style.transformOrigin = "left bottom";
+    gnOvCloseBtn.addEventListener("click", () => {
+    gnOv.style.display = "none";
+    });
+  
+    document.body.style.marginBottom = BANNER_HEIGHT * scale + "px";
+    })(window, document);
+  </script>
+  </div>
+  
+  <a href="../../index.html">TOP</a>
+</body>
+</html>
