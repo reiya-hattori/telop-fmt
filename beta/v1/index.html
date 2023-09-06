@@ -319,8 +319,10 @@
                 firstItem = telopItem[0];
                 lastItem = telopItem[itemLen -1];
 
+                var currentItemPosition = currentItem.getBoundingClientRect().left;
+                var shiftedVal = (btnWidth + 8) - currentItemPosition;
                 if (this.classList.contains(PREV)) {
-                  currentPosition += itemWidth;
+                  currentPosition += (itemWidth + shiftedVal);
                   currentItem.previousElementSibling.classList.add(CURRENT);
                   currentItem.classList.remove(CURRENT);
                   if (firstItem.classList.contains(CURRENT)) {
@@ -332,7 +334,7 @@
                     }, TELOP_SPEED);
                   }
                 } else if (this.classList.contains(NEXT)) {
-                  currentPosition += -(itemWidth);
+                  currentPosition += -(itemWidth - shiftedVal);
                   currentItem.nextElementSibling.classList.add(CURRENT);
                   currentItem.classList.remove(CURRENT);
                   if (telopItem[itemLen - 1].classList.contains(CURRENT)) {
