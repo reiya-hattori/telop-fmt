@@ -206,8 +206,10 @@
             var BANNER_HEIGHT = 50;
             var TELOP_SPEED = 500;
             var AUTO_PLAY_SPEED = 10000;
-            var ADDITIONAL_TIME = 1000;
-            var SWIPE_DISTANCE = 50;
+            var MOVING_DISTANCE = 0.25;
+            var WAITING_TIME = 1000;
+            var WAITING_TIME_FOR_SWIPE = 500;
+            var SWIPE_DISTANCE = 100;
             var CURRENT = "current",PREV = "prev", NEXT = "next";
 
             // イミュータブルな値
@@ -288,7 +290,7 @@
             //自動再生を行う
             function telopAutoPlay() {
               var speed = AUTO_PLAY_SPEED / 1000;
-              var val = -0.25;
+              var val = -(MOVING_DISTANCE);
               autoPlayTimer = setInterval(function() {
                 currentPosition += val;
                 telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
@@ -302,13 +304,12 @@
             }
             setTimeout(function() {
               telopAutoPlay();
-            }, ADDITIONAL_TIME)
+            }, WAITING_TIME)
 
             /**
              * ボタン関連
              */
             var isTelopEnabled = true;
-            // ボタンをクリックしたときの処理
             for (var i = 0; i < toggleBtn.length; i++) {
               toggleBtn[i].addEventListener("click", function(e) {
                 clearInterval(autoPlayTimer);
@@ -355,7 +356,7 @@
                 setTimeout(function() {
                   isTelopEnabled = true;
                   telopAutoPlay();
-                }, ADDITIONAL_TIME);
+                }, WAITING_TIME);
               })
             }
 
@@ -364,34 +365,36 @@
              */
             var touchStartX = 0;
             var touchEndX = 0;
-  
-            for (var i = 0; i < itemLen; i++) {
-              telopItem[i].addEventListener("touchstart", function(e) {
+            // for (var i = 0; i < itemLen; i++) {
+              telopWrap.addEventListener("touchstart", function(e) {
                 clearInterval(autoPlayTimer);
                 touchStartX = e.touches[0].clientX;
               });
     
-              telopItem[i].addEventListener("touchmove", function(e) {
+              telopWrap.addEventListener("touchmove", function(e) {
+                clearInterval(autoPlayTimer);
                 e.preventDefault();
                 touchEndX = e.touches[0].clientX;
                 var swipeDistance = Math.abs(touchEndX - touchStartX);
+                swipeDistance = swipeDistance / swipeDistance;
                 if (touchEndX - touchStartX > SWIPE_DISTANCE) {
-                  currentPosition += (swipeDistance * 0.05);
+                  currentPosition += (swipeDistance * 2.8);
                 } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
-                  currentPosition += -(swipeDistance * 0.05);
+                  currentPosition += -(swipeDistance * 2.8);
                 }
                 telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
               });
     
-              telopItem[i].addEventListener("touchend", function(e) {
-                // clearInterval(autoPlayTimer);
+              telopWrap.addEventListener("touchend", function(e) {
                 if (!isTelopEnabled) return;
                 isTelopEnabled = false;
                 currentItem = telopWrap.getElementsByClassName(CURRENT)[0];
                 firstItem = telopItem[0];
                 lastItem = telopItem[itemLen -1];
+                var currentItemPosition = currentItem.getBoundingClientRect().left;
+                var shiftedVal = (btnWidth + 8) - currentItemPosition;
                 if (touchEndX - touchStartX > SWIPE_DISTANCE) {
-                  currentPosition += itemWidth;
+                  currentPosition += (itemWidth + shiftedVal);
                   telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                   telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
                   currentItem.previousElementSibling.classList.add(CURRENT);
@@ -406,7 +409,7 @@
                   }
                   // console.log("右にスワイプされました"); // like prev
                 } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
-                  currentPosition += -(itemWidth);
+                  currentPosition += -(itemWidth - shiftedVal);
                   telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                   telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
                   currentItem.nextElementSibling.classList.add(CURRENT);
@@ -427,13 +430,12 @@
                 setTimeout(function() {
                   isTelopEnabled = true;
                   telopAutoPlay();
-                }, ADDITIONAL_TIME);
+                }, WAITING_TIME / 2);
 
-                // 初期化
                 touchStartX = 0;
                 touchEndX = 0;
               });
-            }
+            // }
           })(window, document);
         </script>
       </div>
