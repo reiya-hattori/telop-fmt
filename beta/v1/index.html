@@ -59,6 +59,7 @@
             height: 100%;
           }
           .gn-telop_item_100 {
+            position: relative;
             width: 100%;
             height: 100%;
             flex-shrink: 0;
@@ -130,6 +131,10 @@
             margin: 0;
             background: #000;
           }
+          .gn-telop-admark_100.is-hidden {
+            z-index: -1 !important;
+            opacity: 0 !important;
+          }
           .gn-telop-admark_100 * {
             display: block;
             width: 100%;
@@ -174,7 +179,7 @@
                   <p class="gn-telop_text-title_100">あなたへのオススメ</p>
                 </div>
               </div>
-              <div class="gn-telop_item_100">
+              <div class="gn-telop_item_100" data-ads="1">
                 <a class="gn-telop_link_100" href="{landing-url}" target="_blank">
                   <div class="gn-telop_image-container_100">
                     <img src="https://another.geniee.jp/test/murano/Reproducts/tori.jpg" alt="" />
@@ -191,12 +196,11 @@
                     <img src="{icon-url}" alt="" />
                   </div>
                   <div class="gn-telop_text-container_100">
-                    <p class="gn-telop_text-title_100">{title}</p>
-                    <p class="gn-telop_text-optout_100">PR {advertiser}</p>
+                    <p class="gn-telop_text-title_100">これは記事です</p>
                   </div>
                 </a>
               </div>
-              <div class="gn-telop_item_100">
+              <div class="gn-telop_item_100" data-ads="1">
                 <a class="gn-telop_link_100" href="{landing-url}" target="_blank">
                   <div class="gn-telop_image-container_100">
                     <img src="{icon-url}" alt="" />
@@ -207,12 +211,22 @@
                   </div>
                 </a>
               </div>
+              <div class="gn-telop_item_100">
+                <a class="gn-telop_link_100" href="{landing-url}" target="_blank">
+                  <div class="gn-telop_image-container_100">
+                    <img src="{icon-url}" alt="" />
+                  </div>
+                  <div class="gn-telop_text-container_100">
+                    <p class="gn-telop_text-title_100">これは記事です</p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </div>
-          <div class="gn-telop-admark_100">
-            <i width="13" height="13">
-              <img width="13" height="13" src="http://i.yimg.jp/images/advertising/common/img/ico_jiaa_w.png" />
-            </i>
+            <div class="gn-telop-admark_100 is-hidden">
+              <a href="#" target="_blank">
+                <img width="13" height="13" src="http://i.yimg.jp/images/advertising/common/img/ico_jiaa_w.png" />
+              </a>
+            </div>
           </div>
           <div class="gn-telop_toggle-btn_100 prev"></div>
           <div class="gn-telop_toggle-btn_100 next"></div>
@@ -225,13 +239,13 @@
             var BANNER_WIDTH = 320;
             var BANNER_HEIGHT = 50;
             var TELOP_SPEED = 500;
-            var AUTO_PLAY_SPEED = 10000;
+            var AUTO_PLAY_SPEED = 5000;
             var MOVING_DISTANCE = 0.25;
-            var INTERVAL_TIME = 3000;
+            var INTERVAL_TIME = 2500;
             var WAITING_TIME = 1000;
-            var WAITING_TIME_FOR_SWIPE = 500;
             var SWIPE_DISTANCE = 100;
-            var CURRENT = "current",PREV = "prev", NEXT = "next";
+            var CURRENT = "current",PREV = "prev", NEXT = "next", DATA_ADS = "data-ads", IS_HIDDEN = "is-hidden";
+            var AUTO_PLAY_IS_ENABLE = true;
 
             // イミュータブルな値
             var telopOuter = document.getElementsByClassName("gn-telop_outer_" + TAG_ID)[0];
@@ -240,6 +254,7 @@
             var telopWrap = document.getElementsByClassName("gn-telop_wrap_" + TAG_ID)[0];
             var telopItem = document.getElementsByClassName("gn-telop_item_" + TAG_ID);
             var toggleBtn = document.getElementsByClassName("gn-telop_toggle-btn_" + TAG_ID);
+            var telopAdMark = document.getElementsByClassName("gn-telop-admark_" + TAG_ID)[0];
             var btnWidth = toggleBtn[0].clientWidth;
             var itemWidth = BANNER_WIDTH - (btnWidth * 2);
 
@@ -251,7 +266,7 @@
              * スライドプリセット 
             */
             var itemLen = telopItem.length;
-            if (itemLen < 5) {
+            if (itemLen < 6) {
               telopWrap.innerHTML += telopWrap.innerHTML;
               itemLen = telopItem.length;
             }
@@ -298,14 +313,14 @@
                 if (isVisible) {
                   currentItem.classList.add(CURRENT);
                 } else {
-                  clearInterval(autoPlayTimer);
+                  AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
                   currentPosition += -8;
                   telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                  telopWrap.style.transition = "all 0.6s";
+                  telopWrap.style.transition = "all 0.4s";
                   currentItem.classList.remove(CURRENT);
                   currentItem.nextElementSibling.classList.add(CURRENT);
                   setTimeout(function() {
-                    telopAutoPlay();
+                    AUTO_PLAY_IS_ENABLE && telopAutoPlay();
                     telopWrap.style.transition = "";
                   }, INTERVAL_TIME);
                 }
@@ -315,6 +330,11 @@
                 currentItem.classList.remove(CURRENT);
                 firstItem.classList.add(CURRENT);
               }
+
+              if (currentItem.nextElementSibling.getAttribute(DATA_ADS)) {
+                telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+              } else 
+              telopAdMark && telopAdMark.classList.add(IS_HIDDEN)
             }
             //自動再生を行う
             function telopAutoPlay() {
@@ -331,17 +351,20 @@
                 }
               }, speed);
             }
-            setTimeout(function() {
-              telopAutoPlay();
-            }, WAITING_TIME)
+            if (AUTO_PLAY_IS_ENABLE) {
+              setTimeout(function() {
+                telopAutoPlay();
+              }, WAITING_TIME);
+            }
 
             /**
              * ボタン関連
+             * @Todo checkElementVisibilityでsetIntervalが止まったときはクリック操作を禁止する
              */
             var isTelopEnabled = true;
             for (var i = 0; i < toggleBtn.length; i++) {
               toggleBtn[i].addEventListener("click", function(e) {
-                clearInterval(autoPlayTimer);
+                AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
                 if (!isTelopEnabled) return;
                 isTelopEnabled = false;
 
@@ -363,6 +386,11 @@
                       telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                     }, TELOP_SPEED);
                   }
+                  if (currentItem.previousElementSibling.getAttribute(DATA_ADS)) {
+                    telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+                  } else {
+                    telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
+                  }
                 } else if (this.classList.contains(NEXT)) {
                   currentPosition += -(itemWidth - shiftedVal);
                   currentItem.nextElementSibling.classList.add(CURRENT);
@@ -375,6 +403,11 @@
                       telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                     }, TELOP_SPEED);
                   }
+                  if (currentItem.nextElementSibling.getAttribute(DATA_ADS)) {
+                    telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+                  } else {
+                    telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
+                  }
                 }
                 telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                 telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
@@ -384,38 +417,38 @@
                 }, TELOP_SPEED);
                 setTimeout(function() {
                   isTelopEnabled = true;
-                  telopAutoPlay();
-                }, WAITING_TIME);
+                  AUTO_PLAY_IS_ENABLE && telopAutoPlay();
+                }, WAITING_TIME * 2);
               })
             }
 
             /**
              * スワイプ関連
+             * @Todo checkElementVisibilityでsetIntervalが止まったときはクリック操作を禁止する
              */
-            var touchStartX = 0;
-            var touchEndX = 0;
-            // for (var i = 0; i < itemLen; i++) {
+            var touchStartX, touchEndX, touchStartTime, touchEndTime;
             telopWrap.addEventListener("touchstart", function(e) {
-              clearInterval(autoPlayTimer);
+              AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
               touchStartX = e.touches[0].clientX;
             });
   
             telopWrap.addEventListener("touchmove", function(e) {
-              clearInterval(autoPlayTimer);
+              AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
               e.preventDefault();
               
               touchEndX = e.touches[0].clientX;
-              var swipeDistance = Math.abs(touchEndX - touchStartX);
-              swipeDistance = swipeDistance / swipeDistance;
-              if (touchEndX - touchStartX > SWIPE_DISTANCE) {
-                currentPosition += (swipeDistance * 2.4);
-              } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
-                currentPosition += -(swipeDistance * 2.4);
-              }
+              // var swipeDistance = Math.abs(touchEndX - touchStartX);
+              // swipeDistance = swipeDistance / swipeDistance;
+              // if (touchEndX - touchStartX > SWIPE_DISTANCE) {
+              //   currentPosition += (swipeDistance);
+              // } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
+              //   currentPosition += -(swipeDistance);
+              // }
               telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
             });
   
             telopWrap.addEventListener("touchend", function(e) {
+              AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
               if (!isTelopEnabled) return;
               isTelopEnabled = false;
               currentItem = telopWrap.getElementsByClassName(CURRENT)[0];
@@ -437,7 +470,12 @@
                     telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                   }, TELOP_SPEED);
                 }
-                // console.log("右にスワイプされました"); // like prev
+                if (currentItem.previousElementSibling.getAttribute(DATA_ADS)) {
+                  telopAdMark && telopAdMark.classList.remove(IS_HIDDEN)
+                } else {
+                  telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
+                }
+                console.log("右にスワイプされました"); // like prev
               } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
                 currentPosition += -(itemWidth - shiftedVal);
                 telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
@@ -452,20 +490,24 @@
                     telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                   }, TELOP_SPEED);
                 }
-                // console.log("左にスワイプされました"); // like next
+                if (currentItem.nextElementSibling.getAttribute(DATA_ADS)) {
+                  telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+                } else {
+                  telopAdMark && telopAdMark.classList.add(IS_HIDDEN)
+                }
+                console.log("左にスワイプされました"); // like next
               }
               setTimeout(function() {
                 telopWrap.style.transitionDuration = "0ms";
               }, TELOP_SPEED);
               setTimeout(function() {
                 isTelopEnabled = true;
-                telopAutoPlay();
-              }, WAITING_TIME / 2);
+                AUTO_PLAY_IS_ENABLE && telopAutoPlay();
+              }, WAITING_TIME);
 
               touchStartX = 0;
               touchEndX = 0;
             });
-            // }
           })(window, document);
         </script>
       </div>
