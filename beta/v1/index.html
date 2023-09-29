@@ -261,6 +261,9 @@
             // ミュータブルな値
             var currentPosition = -(itemWidth);
             var telopItemTotalWidth = 0;
+            var isTelopEnabled = true;
+            var isEnableTelopOperate = true;
+            var touchStartX, touchEndX, touchStartTime, touchEndTime;
 
             /**
              * スライドプリセット 
@@ -319,9 +322,11 @@
                   telopWrap.style.transition = "all 0.4s";
                   currentItem.classList.remove(CURRENT);
                   currentItem.nextElementSibling.classList.add(CURRENT);
+                  isEnableTelopOperate = false;
                   setTimeout(function() {
                     AUTO_PLAY_IS_ENABLE && telopAutoPlay();
                     telopWrap.style.transition = "";
+                    isEnableTelopOperate = true;
                   }, INTERVAL_TIME);
                 }
               } else {
@@ -349,6 +354,7 @@
                   currentPosition = 0;
                   telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
                 }
+                console.log(isEnableTelopOperate)
               }, speed);
             }
             if (AUTO_PLAY_IS_ENABLE) {
@@ -357,25 +363,109 @@
               }, WAITING_TIME);
             }
 
-            /**
-             * ボタン関連
-             * @Todo checkElementVisibilityでsetIntervalが止まったときはクリック操作を禁止する
-             */
-            var isTelopEnabled = true;
-            for (var i = 0; i < toggleBtn.length; i++) {
-              toggleBtn[i].addEventListener("click", function(e) {
+              /**
+               * ボタン関連
+               * @Todo checkElementVisibilityでsetIntervalが止まったときはクリック操作を禁止する
+               */
+              for (var i = 0; i < toggleBtn.length; i++) {
+                toggleBtn[i].addEventListener("click", function(e) {
+                  AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
+                  if (!isTelopEnabled || !isEnableTelopOperate) return;
+                  isTelopEnabled = false;
+  
+                  currentItem = telopWrap.getElementsByClassName(CURRENT)[0];
+                  firstItem = telopItem[0];
+                  lastItem = telopItem[itemLen -1];
+  
+                  var currentItemPosition = currentItem.getBoundingClientRect().left;
+                  var shiftedVal = (btnWidth + 8) - currentItemPosition;
+                  if (this.classList.contains(PREV)) {
+                    currentPosition += (itemWidth + shiftedVal);
+                    currentItem.previousElementSibling.classList.add(CURRENT);
+                    currentItem.classList.remove(CURRENT);
+                    if (firstItem.classList.contains(CURRENT)) {
+                      setTimeout(function() {
+                        currentPosition = -(telopItemTotalWidth - itemWidth);
+                        telopWrap.appendChild(firstItem);
+                        telopWrap.appendChild(telopItem[0])
+                        telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                      }, TELOP_SPEED);
+                    }
+                    if (currentItem.previousElementSibling.getAttribute(DATA_ADS)) {
+                      telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+                    } else {
+                      telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
+                    }
+                  } else if (this.classList.contains(NEXT)) {
+                    currentPosition += -(itemWidth - shiftedVal);
+                    currentItem.nextElementSibling.classList.add(CURRENT);
+                    currentItem.classList.remove(CURRENT);
+                    if (telopItem[itemLen - 1].classList.contains(CURRENT)) {
+                      setTimeout(function() {
+                        currentPosition = -(itemWidth);
+                        telopWrap.insertBefore(lastItem, telopItem[0]);
+                        telopWrap.insertBefore(telopItem[itemLen - 1], telopItem[0]);
+                        telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                      }, TELOP_SPEED);
+                    }
+                    if (currentItem.nextElementSibling.getAttribute(DATA_ADS)) {
+                      telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+                    } else {
+                      telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
+                    }
+                  }
+                  telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                  telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
+  
+                  setTimeout(function() {
+                    telopWrap.style.transitionDuration = "0ms";
+                  }, TELOP_SPEED);
+                  setTimeout(function() {
+                    isTelopEnabled = true;
+                    AUTO_PLAY_IS_ENABLE && telopAutoPlay();
+                  }, WAITING_TIME * 2);
+                })
+              }
+  
+              /**
+               * スワイプ関連
+               * @Todo checkElementVisibilityでsetIntervalが止まったときはクリック操作を禁止する
+               */
+              telopWrap.addEventListener("touchstart", function(e) {
                 AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
-                if (!isTelopEnabled) return;
+                if (!isEnableTelopOperate) return;
+                touchStartX = e.touches[0].clientX;
+              });
+    
+              telopWrap.addEventListener("touchmove", function(e) {
+                e.preventDefault();
+                AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
+                if (!isEnableTelopOperate) return;
+                
+                touchEndX = e.touches[0].clientX;
+                // var swipeDistance = Math.abs(touchEndX - touchStartX);
+                // swipeDistance = swipeDistance / swipeDistance;
+                // if (touchEndX - touchStartX > SWIPE_DISTANCE) {
+                //   currentPosition += (swipeDistance);
+                // } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
+                //   currentPosition += -(swipeDistance);
+                // }
+                telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+              });
+    
+              telopWrap.addEventListener("touchend", function(e) {
+                AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
+                if (!isTelopEnabled || !isEnableTelopOperate) return;
                 isTelopEnabled = false;
-
                 currentItem = telopWrap.getElementsByClassName(CURRENT)[0];
                 firstItem = telopItem[0];
                 lastItem = telopItem[itemLen -1];
-
                 var currentItemPosition = currentItem.getBoundingClientRect().left;
                 var shiftedVal = (btnWidth + 8) - currentItemPosition;
-                if (this.classList.contains(PREV)) {
+                if (touchEndX - touchStartX > SWIPE_DISTANCE) {
                   currentPosition += (itemWidth + shiftedVal);
+                  telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                  telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
                   currentItem.previousElementSibling.classList.add(CURRENT);
                   currentItem.classList.remove(CURRENT);
                   if (firstItem.classList.contains(CURRENT)) {
@@ -387,12 +477,15 @@
                     }, TELOP_SPEED);
                   }
                   if (currentItem.previousElementSibling.getAttribute(DATA_ADS)) {
-                    telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
+                    telopAdMark && telopAdMark.classList.remove(IS_HIDDEN)
                   } else {
                     telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
                   }
-                } else if (this.classList.contains(NEXT)) {
+                  console.log("右にスワイプされました"); // like prev
+                } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
                   currentPosition += -(itemWidth - shiftedVal);
+                  telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
+                  telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
                   currentItem.nextElementSibling.classList.add(CURRENT);
                   currentItem.classList.remove(CURRENT);
                   if (telopItem[itemLen - 1].classList.contains(CURRENT)) {
@@ -406,108 +499,21 @@
                   if (currentItem.nextElementSibling.getAttribute(DATA_ADS)) {
                     telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
                   } else {
-                    telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
+                    telopAdMark && telopAdMark.classList.add(IS_HIDDEN)
                   }
+                  console.log("左にスワイプされました"); // like next
                 }
-                telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
-
                 setTimeout(function() {
                   telopWrap.style.transitionDuration = "0ms";
                 }, TELOP_SPEED);
                 setTimeout(function() {
                   isTelopEnabled = true;
                   AUTO_PLAY_IS_ENABLE && telopAutoPlay();
-                }, WAITING_TIME * 2);
-              })
-            }
-
-            /**
-             * スワイプ関連
-             * @Todo checkElementVisibilityでsetIntervalが止まったときはクリック操作を禁止する
-             */
-            var touchStartX, touchEndX, touchStartTime, touchEndTime;
-            telopWrap.addEventListener("touchstart", function(e) {
-              AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
-              touchStartX = e.touches[0].clientX;
-            });
+                }, WAITING_TIME);
   
-            telopWrap.addEventListener("touchmove", function(e) {
-              AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
-              e.preventDefault();
-              
-              touchEndX = e.touches[0].clientX;
-              // var swipeDistance = Math.abs(touchEndX - touchStartX);
-              // swipeDistance = swipeDistance / swipeDistance;
-              // if (touchEndX - touchStartX > SWIPE_DISTANCE) {
-              //   currentPosition += (swipeDistance);
-              // } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
-              //   currentPosition += -(swipeDistance);
-              // }
-              telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-            });
-  
-            telopWrap.addEventListener("touchend", function(e) {
-              AUTO_PLAY_IS_ENABLE && clearInterval(autoPlayTimer);
-              if (!isTelopEnabled) return;
-              isTelopEnabled = false;
-              currentItem = telopWrap.getElementsByClassName(CURRENT)[0];
-              firstItem = telopItem[0];
-              lastItem = telopItem[itemLen -1];
-              var currentItemPosition = currentItem.getBoundingClientRect().left;
-              var shiftedVal = (btnWidth + 8) - currentItemPosition;
-              if (touchEndX - touchStartX > SWIPE_DISTANCE) {
-                currentPosition += (itemWidth + shiftedVal);
-                telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
-                currentItem.previousElementSibling.classList.add(CURRENT);
-                currentItem.classList.remove(CURRENT);
-                if (firstItem.classList.contains(CURRENT)) {
-                  setTimeout(function() {
-                    currentPosition = -(telopItemTotalWidth - itemWidth);
-                    telopWrap.appendChild(firstItem);
-                    telopWrap.appendChild(telopItem[0])
-                    telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                  }, TELOP_SPEED);
-                }
-                if (currentItem.previousElementSibling.getAttribute(DATA_ADS)) {
-                  telopAdMark && telopAdMark.classList.remove(IS_HIDDEN)
-                } else {
-                  telopAdMark && telopAdMark.classList.add(IS_HIDDEN);
-                }
-                console.log("右にスワイプされました"); // like prev
-              } else if (touchStartX - touchEndX > SWIPE_DISTANCE) {
-                currentPosition += -(itemWidth - shiftedVal);
-                telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                telopWrap.style.transitionDuration = TELOP_SPEED + "ms";
-                currentItem.nextElementSibling.classList.add(CURRENT);
-                currentItem.classList.remove(CURRENT);
-                if (telopItem[itemLen - 1].classList.contains(CURRENT)) {
-                  setTimeout(function() {
-                    currentPosition = -(itemWidth);
-                    telopWrap.insertBefore(lastItem, telopItem[0]);
-                    telopWrap.insertBefore(telopItem[itemLen - 1], telopItem[0]);
-                    telopWrap.style.transform = "translate3d(" + currentPosition + "px, 0, 0)";
-                  }, TELOP_SPEED);
-                }
-                if (currentItem.nextElementSibling.getAttribute(DATA_ADS)) {
-                  telopAdMark && telopAdMark.classList.remove(IS_HIDDEN);
-                } else {
-                  telopAdMark && telopAdMark.classList.add(IS_HIDDEN)
-                }
-                console.log("左にスワイプされました"); // like next
-              }
-              setTimeout(function() {
-                telopWrap.style.transitionDuration = "0ms";
-              }, TELOP_SPEED);
-              setTimeout(function() {
-                isTelopEnabled = true;
-                AUTO_PLAY_IS_ENABLE && telopAutoPlay();
-              }, WAITING_TIME);
-
-              touchStartX = 0;
-              touchEndX = 0;
-            });
+                touchStartX = 0;
+                touchEndX = 0;
+              });
           })(window, document);
         </script>
       </div>
